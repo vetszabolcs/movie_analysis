@@ -2,3 +2,7 @@
 *.bak
 *.ipynb_checkpoints
 *.log
+.idea
+__pycache__
+.ipynb_checkpoints
+.Rhistory
