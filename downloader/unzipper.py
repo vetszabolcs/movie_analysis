@@ -16,9 +16,11 @@ def extractor(zip_name, dest):
 
 
 def renamer(zip_name, dest, temp_dir):
+    forbidden_chars = "[\\\/:\*\?\"<>\|]"
     extracted = glob(temp_dir + "/*[!.zip]")[0]
     extension = "." + extracted.split(".")[-1]
     new_name = re.sub(".zip$", extension, zip_name.split("\\")[-1])
+    new_name = re.sub(forbidden_chars, " ", new_name).strip()
     new_name = os.path.join(dest, new_name)
     if not os.path.exists(new_name):
         os.rename(extracted, new_name)

@@ -30,7 +30,7 @@ logging.basicConfig(level=logging.INFO,
 
 # Getting titles to be searched
 to_search = pd.read_sql(
-                    text('select original_title_year, primary_title_year\
+                    text('select original_title_year\
                          from movies.search\
                          where searched = 0 and "startYear" <= 2020\
                          order by "startYear" desc'),
@@ -55,7 +55,8 @@ def update_downloaded(cond_val):
 def downloader(dest, temp):
     logging.info("Started downloader")
     send_email("Started downloader")
-    for o, p in to_search.values:
+    for o in to_search:
+        o = "Occupation: Rainfall (2020)"
         sleep(3)
         logging.info(f"Searching {o}")
         cond_val = o.replace("\'", "\'\'")
@@ -76,7 +77,6 @@ def downloader(dest, temp):
             z.renamer(download_path, dest, temp)
             update_downloaded(cond_val)
             logging.info(f"Downloaded {title}")
-
 
 if __name__ == "__main__":
     try:
