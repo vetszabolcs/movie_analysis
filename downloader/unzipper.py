@@ -21,6 +21,7 @@ def renamer(zip_name, dest, temp_dir):
     new_name = re.sub(".zip$", extension, zip_name.split("\\")[-1])
     new_name = os.path.join(dest, new_name)
     if not os.path.exists(new_name):
+        print(f"Writing file as {new_name}")
         os.rename(extracted, new_name)
         time.sleep(1)
     shutil.rmtree(temp_dir)
