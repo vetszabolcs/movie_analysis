@@ -55,8 +55,7 @@ def update_downloaded(cond_val):
 def downloader(dest, temp):
     logging.info("Started downloader")
     send_email("Started downloader")
-    for o in to_search:
-        o = "Occupation: Rainfall (2020)"
+    for o in to_search["original_title_year"]:
         sleep(3)
         logging.info(f"Searching {o}")
         cond_val = o.replace("\'", "\'\'")
