@@ -30,7 +30,7 @@ logging.basicConfig(level=logging.INFO,
 
 # Getting titles to be searched
 to_search = pd.read_sql(
-                    text('select original_title_year\
+                    text('select original_title_year, primary_title_year\
                          from movies.search\
                          where searched = 0 and "startYear" <= 2020\
                          order by "startYear" desc'),
@@ -56,16 +56,19 @@ def update_downloaded(cond_val):
 def downloader(dest, temp):
     logging.info("Started downloader")
     send_email("Started downloader")
-    for o in to_search["original_title_year"]:
+    for o, p in to_search.loc[:, ["original_title_year", "primary_title_year"]].values:
         sleep(3)
-        logging.info(f"Searching {o}")
+        logging.info(f"Searching subtitle - original title: {o}\tprimary title: {p}")
         cond_val = o.replace("\'", "\'\'")  # reformat to sql readable
 
         try:
             movie_site = funs.get_movie_site(o)
         except TypeError:
-            update_searched(cond_val)
-            continue
+            try:
+                movie_site = funs.get_movie_site(p)
+            except TypeError:
+                update_searched(cond_val)
+                continue
 
         title, download_site = funs.get_title_and_download_site(movie_site)
         title = re.sub(c.forbidden_chars, " ", title).strip()
