@@ -1,11 +1,11 @@
 import os
+import re
 import sys
 import logging
 import pandas as pd
 import donwloader_functions as funs
 import constants as c
 import unzipper as z
-from urllib.request import urlretrieve
 from sqlalchemy import create_engine
 from sqlalchemy import text
 from send_email import send_email
@@ -36,6 +36,7 @@ to_search = pd.read_sql(
                          order by "startYear" desc'),
                     con)
 
+
 # The searcher algorythm of opensubtitles is clever enough to redirect to a grammatically - or
 # meaning-similiar title's website if the given title was not found.
 # For eg.: The Gifted (1999) redirects to The Talented Mr. Ripley (1999)
@@ -58,24 +59,27 @@ def downloader(dest, temp):
     for o in to_search["original_title_year"]:
         sleep(3)
         logging.info(f"Searching {o}")
-        cond_val = o.replace("\'", "\'\'")
-        url = c.URL + c.MOVIE_END + o.replace(" ", "+")
-        title, download_link = funs.get_title_and_download_link(url)
-        update_searched(cond_val)
-        if download_link is None:
-            try:
-                subt_link = funs.get_subt_link(url)
-                title, download_link = funs.get_title_and_download_link(subt_link)
-            except TypeError:
-                continue
-        if download_link and title:
-            download_path = os.path.join(c.TEMP_TEST_DIR, title + ".zip")
-            sleep(5)
-            urlretrieve(download_link, download_path)
+        cond_val = o.replace("\'", "\'\'")  # reformat to sql readable
+
+        try:
+            movie_site = funs.get_movie_site(o)
+        except TypeError:
+            update_searched(cond_val)
+            continue
+
+        title, download_site = funs.get_title_and_download_site(movie_site)
+        title = re.sub(c.forbidden_chars, " ", title).strip()
+        download_link = funs.get_donwload_link(download_site)
+
+        if download_link:
+            download_path = os.path.join(temp, title + ".zip")
+            funs.donwload_file(download_link, download_path)
             z.extractor(download_path, temp)
             z.renamer(download_path, dest, temp)
+            update_searched(cond_val)
             update_downloaded(cond_val)
             logging.info(f"Downloaded {title}")
+
 
 if __name__ == "__main__":
     try:

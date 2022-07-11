@@ -4,9 +4,11 @@ import shutil
 import time
 import re
 from zipfile import ZipFile
+from constants import forbidden_chars
 
 
 def extractor(zip_name, dest):
+    re.sub(forbidden_chars, " ", zip_name).strip()
     extensions = ("ass", "mkv", "mmc", "mpl2", "sami", "sbv", "scc", "srt", "ssa", "stl", "sub", "txt", "xml")
     with ZipFile(zip_name, "r") as zipf:
         files = zipf.namelist()
@@ -16,7 +18,6 @@ def extractor(zip_name, dest):
 
 
 def renamer(zip_name, dest, temp_dir):
-    forbidden_chars = "[\\\/:\*\?\"<>\|]"
     extracted = glob(temp_dir + "/*[!.zip]")[0]
     extension = "." + extracted.split(".")[-1]
     new_name = re.sub(".zip$", extension, zip_name.split("\\")[-1])
