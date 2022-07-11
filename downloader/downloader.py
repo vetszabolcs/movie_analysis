@@ -76,7 +76,6 @@ def downloader(dest, temp):
             z.renamer(download_path, dest, temp)
             update_downloaded(cond_val)
             logging.info(f"Downloaded {title}")
-            break
 
 
 if __name__ == "__main__":
