@@ -15,12 +15,15 @@ def get_movie_site(title):
 
 
 def get_title_and_download_site(movie_site) -> tuple:
-    soup = BeautifulSoup(get(movie_site).text, features="lxml")
-    title = soup.find(class_="movie-main-title").text
-    table = soup.find(class_="table other-subs")
-    sub_link = re.search("\"/subtitle.*-english-yify.*?\"", str(table))[0].replace("\"", "")
-    download_site = URL + sub_link
-    return title, download_site
+    try:
+        soup = BeautifulSoup(get(movie_site).text, features="lxml")
+        title = soup.find(class_="movie-main-title").text
+        table = soup.find(class_="table other-subs")
+        sub_link = re.search("\"/subtitle.*-english-yify.*?\"", str(table))[0].replace("\"", "")
+        download_site = URL + sub_link
+        return title, download_site
+    except TypeError:
+        return None, None
 
 
 def get_donwload_link(download_site):

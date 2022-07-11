@@ -58,7 +58,7 @@ def downloader(dest, temp):
     send_email("Started downloader")
     for o, p in to_search.loc[:, ["original_title_year", "primary_title_year"]].values:
         sleep(3)
-        logging.info(f"Searching subtitle - original title: {o}\tprimary title: {p}")
+        logging.info(f"Searching subtitle - original title: {o} - primary title: {p}")
         cond_val = o.replace("\'", "\'\'")  # reformat to sql readable
 
         try:
@@ -68,9 +68,13 @@ def downloader(dest, temp):
                 movie_site = funs.get_movie_site(p)
             except TypeError:
                 update_searched(cond_val)
+                logging.info("Updated search column")
                 continue
 
         title, download_site = funs.get_title_and_download_site(movie_site)
+        if download_site is None:
+            continue
+
         title = re.sub(c.forbidden_chars, " ", title).strip()
         download_link = funs.get_donwload_link(download_site)
 
@@ -81,7 +85,8 @@ def downloader(dest, temp):
             z.renamer(download_path, dest, temp)
             update_searched(cond_val)
             update_downloaded(cond_val)
-            logging.info(f"Downloaded {title}")
+            logging.info("Updated search and download column")
+            logging.info(f"Downloaded - {title}")
 
 
 if __name__ == "__main__":
