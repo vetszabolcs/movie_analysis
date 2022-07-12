@@ -27,10 +27,13 @@ def get_title_and_download_site(movie_site) -> tuple:
 
 
 def get_donwload_link(download_site):
-    soup = BeautifulSoup(get(download_site).text, features="html.parser")
-    download_endp = soup.find(class_="download-subtitle").get("href")
-    download_link = URL + download_endp
-    return download_link
+    try:
+        soup = BeautifulSoup(get(download_site).text, features="html.parser")
+        download_endp = soup.find(class_="download-subtitle").get("href")
+        download_link = URL + download_endp
+        return download_link
+    except TypeError:
+        return None
 
 
 def donwload_file(url, dest):

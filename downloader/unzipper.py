@@ -1,5 +1,4 @@
 import os
-from glob import glob
 import shutil
 import time
 import re
@@ -18,13 +17,13 @@ def extractor(zip_name, dest):
 
 
 def renamer(zip_name, dest, temp_dir):
-    extracted = glob(temp_dir + "/*[!.zip]")[0]
+    extracted = [f for f in os.listdir(temp_dir) if not f.endswith("zip")][0]  # glob does not recognize leading dot
     extension = "." + extracted.split(".")[-1]
     new_name = re.sub(".zip$", extension, zip_name.split("\\")[-1])
     new_name = re.sub(forbidden_chars, " ", new_name).strip()
     new_name = os.path.join(dest, new_name)
     if not os.path.exists(new_name):
-        os.rename(extracted, new_name)
+        os.rename(os.path.join(temp_dir, extracted), new_name)
         time.sleep(1)
     shutil.rmtree(temp_dir)
     os.mkdir(temp_dir)

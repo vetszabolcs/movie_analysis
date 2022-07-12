@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import text
 from send_email import send_email
 from time import sleep
+from random import randint
 
 # Setting up SQL connection
 con = f"postgresql://postgres:{os.environ.get('PASS')}@localhost:5432/postgres"
@@ -57,18 +58,17 @@ def downloader(dest, temp):
     logging.info("Started downloader")
     send_email("Started downloader")
     for o, p in to_search.loc[:, ["original_title_year", "primary_title_year"]].values:
-        sleep(3)
+        sleep(randint(1, 4))
         logging.info(f"Searching subtitle - original title: {o} - primary title: {p}")
         cond_val = o.replace("\'", "\'\'")  # reformat to sql readable
-
+        update_searched(cond_val)
+        logging.info("Updated search column")
         try:
             movie_site = funs.get_movie_site(o)
         except TypeError:
             try:
                 movie_site = funs.get_movie_site(p)
             except TypeError:
-                update_searched(cond_val)
-                logging.info("Updated search column")
                 continue
 
         title, download_site = funs.get_title_and_download_site(movie_site)
@@ -85,7 +85,7 @@ def downloader(dest, temp):
             z.renamer(download_path, dest, temp)
             update_searched(cond_val)
             update_downloaded(cond_val)
-            logging.info("Updated search and download column")
+            logging.info("Updated download column")
             logging.info(f"Downloaded - {title}")
 
 
@@ -95,3 +95,4 @@ if __name__ == "__main__":
     except Exception as e:
         logging.error(e)
         send_email(f"Something went wrong with the downloader... {e}")
+
