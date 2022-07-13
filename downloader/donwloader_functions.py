@@ -22,11 +22,11 @@ def get_title_and_download_site(movie_site) -> tuple:
         sub_link = re.search("\"/subtitle.*-english-yify.*?\"", str(table))[0].replace("\"", "")
         download_site = URL + sub_link
         return title, download_site
-    except TypeError:
+    except (TypeError, AttributeError):
         return None, None
 
 
-def get_donwload_link(download_site):
+def get_download_link(download_site):
     try:
         soup = BeautifulSoup(get(download_site).text, features="html.parser")
         download_endp = soup.find(class_="download-subtitle").get("href")

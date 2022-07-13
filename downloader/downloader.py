@@ -74,19 +74,20 @@ def downloader(dest, temp):
         title, download_site = funs.get_title_and_download_site(movie_site)
         if download_site is None:
             continue
-
         title = re.sub(c.forbidden_chars, " ", title).strip()
-        download_link = funs.get_donwload_link(download_site)
+        download_link = funs.get_download_link(download_site)
 
         if download_link:
             download_path = os.path.join(temp, title + ".zip")
-            funs.donwload_file(download_link, download_path)
-            z.extractor(download_path, temp)
-            z.renamer(download_path, dest, temp)
-            update_searched(cond_val)
-            update_downloaded(cond_val)
-            logging.info("Updated download column")
-            logging.info(f"Downloaded - {title}")
+            try:
+                funs.donwload_file(download_link, download_path)
+                z.extractor(download_path, temp)
+                z.renamer(download_path, dest, temp)
+                update_downloaded(cond_val)
+                logging.info("Updated download column")
+                logging.info(f"Downloaded - {title}")
+            except (TypeError, IndexError):
+                continue
 
 
 if __name__ == "__main__":

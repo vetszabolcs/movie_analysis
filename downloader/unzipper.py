@@ -8,7 +8,7 @@ from constants import forbidden_chars
 
 def extractor(zip_name, dest):
     re.sub(forbidden_chars, " ", zip_name).strip()
-    extensions = ("ass", "mkv", "mmc", "mpl2", "sami", "sbv", "scc", "srt", "ssa", "stl", "sub", "txt", "xml")
+    extensions = ("ass", "mkv", "mmc", "mpl2", "sami", "smi", "sbv", "scc", "srt", "ssa", "stl", "sub", "txt", "xml")
     with ZipFile(zip_name, "r") as zipf:
         files = zipf.namelist()
         for f in files:
@@ -17,7 +17,7 @@ def extractor(zip_name, dest):
 
 
 def renamer(zip_name, dest, temp_dir):
-    extracted = [f for f in os.listdir(temp_dir) if not f.endswith("zip")][0]  # glob does not recognize leading dot
+    extracted = [f for f in os.listdir(temp_dir) if not f.endswith(".zip")][0]  # glob does not recognize leading dot
     extension = "." + extracted.split(".")[-1]
     new_name = re.sub(".zip$", extension, zip_name.split("\\")[-1])
     new_name = re.sub(forbidden_chars, " ", new_name).strip()
