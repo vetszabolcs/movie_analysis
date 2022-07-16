@@ -26,11 +26,10 @@ logging.basicConfig(level=logging.INFO,
                               ])
 
 
-# The searcher algorythm of opensubtitles is clever enough to redirect to a grammatically - or
-# meaning-similiar title's website if the given title was not found.
-# For eg.: The Gifted (1999) redirects to The Talented Mr. Ripley (1999)
+# If the given title was not found yifysubtitles redirects to a grammatically - or
+# meaning-similar title's website. For eg.: The Gifted (1999) redirects to The Talented Mr. Ripley (1999)
 # This could be checked before download although I download the found subtitle anyway
-# and gonna get it's details later from IMDb.
+# and gonna get its details later from IMDb.
 
 def downloader(dest, temp):
     logging.info("Started downloader")

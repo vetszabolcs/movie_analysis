@@ -14,6 +14,7 @@ def extractor(zip_name, dest):
         for f in files:
             if f.endswith(extensions):
                 zipf.extract(f, dest)
+                break
 
 
 def renamer(zip_name, dest, temp_dir):
