@@ -2,7 +2,7 @@ import os
 import yagmail
 
 my_mail = "witens11@gmail.com"
-yag = yagmail.SMTP("witens11", os.environ.get("GPASS"), port=465)
+yag = yagmail.SMTP(my_mail, os.environ.get("GPASS"), port=465)
 
 
 def send_email(msg):
