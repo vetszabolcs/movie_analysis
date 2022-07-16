@@ -8,4 +8,6 @@ TEMP_DIR = join(SUBTITLES_DIR, "temp")
 SUBTITLES_TEST_DIR = join(DATA_DIR, "subtitles_test")
 TEMP_TEST_DIR = join(SUBTITLES_TEST_DIR, "temp")
 
-forbidden_chars = "[\\\/:\*\?\"<>\|]"
+forbidden_chars = "[\\\\/:\\*\\?\"<>\\|]"
+MIN_YEAR = 1918
+MOVIES_PER_YEAR = 100
