@@ -36,12 +36,16 @@ def downloader(dest, temp):
     send_email("Started downloader")
     for year in range(2020, c.MIN_YEAR-1, -1):
         to_search = sql.slice_sql(year).sample(frac=1)[["original_title_year", "primary_title_year"]]
+        print(year)
+        passed_sql_check = False
         for o, p in to_search.values:
 
             if sql.check_download_count(year) >= c.MOVIES_PER_YEAR:
-                logging.info(f"Downloading 100 movies from {year} completed")
-                send_email(f"Downloading 100 movies from {year} completed")
+                if passed_sql_check:
+                    logging.info(f"Downloading movies from {year} completed")
+                    send_email(f"Downloading movies from {year} completed")
                 break
+            passed_sql_check = True
 
             sleep(randint(1, 4))
             logging.info(f"Searching subtitle - original title: {o} - primary title: {p}")
@@ -82,8 +86,4 @@ def downloader(dest, temp):
 
 
 if __name__ == "__main__":
-    try:
-        downloader(c.SUBTITLES_DIR, c.TEMP_DIR)
-    except Exception as e:
-        logging.error(e)
-        send_email(f"Something went wrong with the downloader... {e}")
+    downloader(c.SUBTITLES_DIR, c.TEMP_DIR)

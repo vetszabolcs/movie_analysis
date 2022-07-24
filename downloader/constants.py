@@ -15,4 +15,4 @@ TEMP_TEST_DIR = join(SUBTITLES_TEST_DIR, "temp")
 # Downloader
 forbidden_chars = "[\\\\/:\\*\\?\"<>\\|]"
 MIN_YEAR = 1918
-MOVIES_PER_YEAR = 100
+MOVIES_PER_YEAR = 120
